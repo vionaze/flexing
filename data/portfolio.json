@@ -1,0 +1,36 @@
+{
+  "items": [
+    {
+      "id": "7065121f-36f4-489f-b7bb-b63a5b9e2f5e",
+      "track": "si",
+      "title": "Neural Ops Console",
+      "description": "Konsol observabilitas model LLM real-time — pipeline evaluasi, drift detection, dan guardrail dalam satu permukaan.",
+      "url": "https://github.com/vionaze/flexing",
+      "tags": [
+        "llm",
+        "observability",
+        "agents"
+      ],
+      "image": "",
+      "source": "ai",
+      "createdAt": "2026-10-04T10:08:52.345Z",
+      "updatedAt": "2026-10-04T10:08:52.345Z"
+    },
+    {
+      "id": "f3534995-4b47-4059-8ea7-b5bc162d7807",
+      "track": "web3",
+      "title": "On-Chain Yield Router",
+      "description": "Router likuiditas lintas DEX dengan simulasi slippage dan rebalancing otomatis untuk portofolio DeFi.",
+      "url": "https://ethereum.org",
+      "tags": [
+        "defi",
+        "routing",
+        "solidity"
+      ],
+      "image": "",
+      "source": "ai",
+      "createdAt": "2026-10-04T10:08:52.416Z",
+      "updatedAt": "2026-10-04T10:08:52.416Z"
+    }
+  ]
+}
