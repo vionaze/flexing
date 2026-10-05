@@ -2,6 +2,7 @@ import Link from "next/link";
 import { listByTrack } from "@/lib/db";
 import { PortfolioCard, trackMeta } from "@/components/portfolio-card";
 import { Parallax, Reveal, DepthStage } from "@/components/parallax";
+import { Navbar } from "@/components/navbar";
 import type { Track } from "@/lib/types";
 
 export async function TrackPortfolioPage({ track }: { track: Track }) {
@@ -18,32 +19,8 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
 
   return (
     <main className="aura relative min-h-screen overflow-x-hidden">
-      {/* header — flat, tegas */}
-      <header className="sticky top-0 z-20 border-b border-border bg-bg">
-        <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
-          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
-            <Link
-              href="/"
-              className="flex shrink-0 items-center gap-2 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-text-3 transition-colors hover:text-text sm:text-xs"
-            >
-              <span aria-hidden>←</span> FEYBER
-            </Link>
-            <span className="h-4 w-px bg-border" aria-hidden />
-            <div className="flex min-w-0 items-center gap-2">
-              <span className={meta.dotClass} />
-              <span className="truncate text-sm font-semibold tracking-tight">
-                {meta.label}
-              </span>
-            </div>
-          </div>
-          <Link
-            href={isSi ? "/web3" : "/si"}
-            className="shrink-0 border border-border px-3 py-1.5 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-text-2 transition-colors hover:border-border-strong hover:text-text sm:text-xs"
-          >
-            {isSi ? "WEB3" : "SI"}
-          </Link>
-        </div>
-      </header>
+      {/* header — navbar sama dengan landing, track aktif tersorot */}
+      <Navbar active={track} sticky />
 
       {/* hero — parallax stack */}
       <section className="relative z-10 mx-auto w-full max-w-5xl px-6 py-16 md:py-20">

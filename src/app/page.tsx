@@ -10,6 +10,7 @@ import {
 import { UnicornAura, AURA_PROJECT_ID } from "@/components/unicorn-aura";
 import { LiquidFill } from "@/components/liquid-card";
 import { AuraButton } from "@/components/aura-button";
+import { Navbar } from "@/components/navbar";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +37,8 @@ export default async function LandingPage() {
 
       {/* ============ HERO ============ */}
       <div className="relative min-h-[92vh] overflow-hidden">
+        <Navbar />
+
         {/* readability veil — meredupkan aura agar teks terbaca */}
         <div
           aria-hidden
@@ -45,32 +48,6 @@ export default async function LandingPage() {
               "linear-gradient(105deg, rgba(23,23,23,0.82) 0%, rgba(23,23,23,0.55) 48%, rgba(23,23,23,0.35) 100%)",
           }}
         />
-
-        {/* nav — flat, tegas */}
-        <header className="relative z-20 border-b border-border bg-bg">
-          <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
-            <Link href="/" className="flex items-center">
-              <span className="text-xl font-bold uppercase tracking-[0.16em] sm:text-2xl">
-                FEYBER
-              </span>
-            </Link>
-            <nav className="flex items-center gap-1 sm:gap-3">
-              <Link
-                href="/si"
-                className="border-b-2 border-transparent px-1 pb-1 pt-0.5 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-text-3 transition-colors hover:border-si hover:text-text sm:px-2 sm:text-xs"
-              >
-                <span className="sm:hidden">SI</span>
-                <span className="hidden sm:inline">Super Intelligence</span>
-              </Link>
-              <Link
-                href="/web3"
-                className="border-b-2 border-transparent px-1 pb-1 pt-0.5 font-mono text-[0.68rem] uppercase tracking-[0.14em] text-text-3 transition-colors hover:border-web3 hover:text-text sm:px-2 sm:text-xs"
-              >
-                WEB3
-              </Link>
-            </nav>
-          </div>
-        </header>
 
         {/* hero content — big name, bio, dual CTA, info, visual + stats */}
         <section className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pb-14 pt-10 lg:grid-cols-[1.15fr_0.85fr] lg:pt-14">
