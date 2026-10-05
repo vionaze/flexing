@@ -51,7 +51,7 @@ export function PortfolioCard({
   return (
     <Parallax speed={index % 2 === 0 ? 0.05 : -0.05}>
       <Tilt3D max={8} className="h-full">
-        <article className="lift flex h-full flex-col overflow-hidden rounded-[1.25rem] border border-border bg-surface">
+        <article className="lift group flex h-full flex-col overflow-hidden rounded-[1.25rem] border border-border bg-surface/60 backdrop-blur-xl">
           <div
             className="relative h-40 w-full overflow-hidden bg-bg-2"
             style={{ transformStyle: "preserve-3d" }}
@@ -144,7 +144,10 @@ export function PortfolioCard({
               className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-text-2 transition-colors hover:text-text"
             >
               Lihat karya
-              <span aria-hidden className="text-text-4">
+              <span
+                aria-hidden
+                className="text-text-4 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-text"
+              >
                 ↗
               </span>
             </a>

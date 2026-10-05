@@ -9,6 +9,12 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
   const meta = trackMeta[track];
   const isSi = track === "si";
   const accent = isSi ? "var(--si)" : "var(--web3)";
+  const gradient = isSi
+    ? "linear-gradient(90deg,#99f6e4,#2dd4bf)"
+    : "linear-gradient(90deg,#93c5fd,#3b82f6)";
+  const labelParts = meta.label.split(" ");
+  const labelHead = labelParts.slice(0, -1).join(" ");
+  const labelTail = labelParts[labelParts.length - 1];
 
   return (
     <main className="aura relative min-h-screen overflow-x-hidden">
@@ -57,13 +63,38 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
 
         <Parallax speed={-0.1}>
           <Reveal>
-            <p className="label" style={{ color: accent }}>
-              {isSi ? "Orbit 01" : "Orbit 02"}
+            <p
+              className="font-doodle -rotate-2 text-2xl sm:text-3xl"
+              style={{ color: accent }}
+            >
+              {isSi ? "orbit 01" : "orbit 02"}
             </p>
-            <h1 className="display mt-5 text-[clamp(2.4rem,5.5vw,3.8rem)]">
-              {meta.label}
+            <h1 className="display mt-2 text-[clamp(2.4rem,6vw,4.5rem)] uppercase leading-[1.05]">
+              <span className="text-white">{labelHead}</span>{" "}
+              <span className="relative inline-block">
+                <span
+                  className="bg-clip-text text-transparent"
+                  style={{ backgroundImage: gradient }}
+                >
+                  {labelTail}
+                </span>
+                <svg
+                  aria-hidden
+                  className="absolute -bottom-2 left-0 h-2.5 w-full"
+                  viewBox="0 0 200 12"
+                  fill="none"
+                  preserveAspectRatio="none"
+                >
+                  <path
+                    d="M2 9c32-6 64-6 98-3s72 2 98-3"
+                    stroke={isSi ? "#2dd4bf" : "#3b82f6"}
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
             </h1>
-            <p className="mt-4 max-w-xl text-lg text-text-2">{meta.blurb}</p>
+            <p className="mt-5 max-w-xl text-lg text-text-2">{meta.blurb}</p>
           </Reveal>
         </Parallax>
 
@@ -92,7 +123,9 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
               >
                 <span className={meta.dotClass} />
               </div>
-              <h2 className="display text-2xl">Orbit masih kosong</h2>
+              <h2 className="font-doodle text-4xl" style={{ color: accent }}>
+                orbit masih kosong!
+              </h2>
               <p className="max-w-md text-text-3">
                 Karya untuk track {meta.label} akan muncul di sini dalam waktu
                 dekat.
