@@ -204,7 +204,7 @@ export function AdminDashboard({
               </div>
 
               <div>
-                <label className="label mb-2.5 block !text-text-3">Orbit</label>
+                <label className="label mb-2.5 block !text-text-3">Track</label>
                 <div className="grid grid-cols-2 gap-2.5">
                   {(["si", "web3"] as Track[]).map((t) => (
                     <button

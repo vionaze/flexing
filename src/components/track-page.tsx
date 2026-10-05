@@ -40,13 +40,7 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
 
         <Parallax speed={-0.1}>
           <Reveal>
-            <p
-              className="font-doodle -rotate-2 text-2xl sm:text-3xl"
-              style={{ color: accent }}
-            >
-              {isSi ? "orbit 01" : "orbit 02"}
-            </p>
-            <h1 className="display mt-2 text-[clamp(2.4rem,6vw,4.5rem)] uppercase leading-[1.05]">
+            <h1 className="display text-[clamp(2.4rem,6vw,4.5rem)] uppercase leading-[1.05]">
               <span className="text-white">{labelHead}</span>{" "}
               <span className="relative inline-block">
                 <span
@@ -101,7 +95,7 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
                 <span className={meta.dotClass} />
               </div>
               <h2 className="font-doodle text-4xl" style={{ color: accent }}>
-                orbit masih kosong!
+                belum ada karya!
               </h2>
               <p className="max-w-md text-text-3">
                 Karya untuk track {meta.label} akan muncul di sini dalam waktu
