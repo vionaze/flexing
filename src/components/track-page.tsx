@@ -65,19 +65,6 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
                 </svg>
               </span>
             </h1>
-            <p className="mt-5 max-w-xl text-lg text-text-2">{meta.blurb}</p>
-          </Reveal>
-        </Parallax>
-
-        <Parallax speed={0.12}>
-          <Reveal delay={0.1}>
-            <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-border bg-surface px-5 py-2.5">
-              <span className={meta.dotClass} />
-              <span className="text-sm text-text-2">
-                <span className="font-semibold text-text">{items.length}</span>{" "}
-                karya terkurasi
-              </span>
-            </div>
           </Reveal>
         </Parallax>
       </section>

@@ -25,7 +25,8 @@ export type LogAction =
   | "create"
   | "update"
   | "delete"
-  | "enrich";
+  | "enrich"
+  | "settings";
 
 export interface LogEntry {
   timestamp: string;

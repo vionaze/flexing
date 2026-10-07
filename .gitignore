@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# ai settings (berisi API key)
+data/settings.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

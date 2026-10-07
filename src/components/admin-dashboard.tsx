@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { PortfolioItem, Track } from "@/lib/types";
@@ -34,6 +34,56 @@ export function AdminDashboard({
   const [notice, setNotice] = useState<string | null>(null);
   const [enriching, startEnrich] = useTransition();
   const [saving, startSave] = useTransition();
+
+  const [aiBaseUrl, setAiBaseUrl] = useState("");
+  const [aiModel, setAiModel] = useState("");
+  const [aiApiKey, setAiApiKey] = useState("");
+  const [aiHasKey, setAiHasKey] = useState(false);
+  const [savingSettings, startSaveSettings] = useTransition();
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (!data) return;
+        setAiBaseUrl(data.aiBaseUrl ?? "");
+        setAiModel(data.aiModel ?? "");
+        setAiHasKey(Boolean(data.hasKey));
+      })
+      .catch(() => {});
+  }, []);
+
+  async function handleSaveSettings() {
+    setError(null);
+
+    startSaveSettings(async () => {
+      try {
+        const res = await fetch("/api/settings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            aiBaseUrl,
+            aiModel,
+            aiApiKey: aiApiKey || undefined,
+          }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data.error ?? "Gagal menyimpan pengaturan");
+          return;
+        }
+
+        setAiBaseUrl(data.aiBaseUrl ?? "");
+        setAiModel(data.aiModel ?? "");
+        setAiHasKey(Boolean(data.hasKey));
+        setAiApiKey("");
+        flash("Pengaturan AI disimpan");
+      } catch {
+        setError("Terjadi kesalahan jaringan");
+      }
+    });
+  }
 
   function flash(message: string) {
     setNotice(message);
@@ -243,6 +293,65 @@ export function AdminDashboard({
                 {notice}
               </p>
             )}
+          </div>
+
+          {/* PENGATURAN AI */}
+          <div className="card-flat mt-5 p-7">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="display text-xl">Pengaturan AI</h2>
+              <span
+                className={`chip ${aiHasKey ? "chip-success" : "chip-danger"}`}
+              >
+                {aiHasKey ? "API key aktif" : "belum ada key"}
+              </span>
+            </div>
+            <p className="mt-2 text-sm text-text-3">
+              Endpoint OpenAI-compatible untuk tombol Generate dengan AI.
+            </p>
+
+            <div className="mt-5 space-y-4">
+              <div>
+                <label className="label mb-2.5 block !text-text-3">
+                  Base URL
+                </label>
+                <input
+                  className="field"
+                  placeholder="https://api.openai.com/v1"
+                  value={aiBaseUrl}
+                  onChange={(e) => setAiBaseUrl(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="label mb-2.5 block !text-text-3">Model</label>
+                <input
+                  className="field"
+                  placeholder="gpt-4o-mini"
+                  value={aiModel}
+                  onChange={(e) => setAiModel(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="label mb-2.5 block !text-text-3">
+                  API Key
+                </label>
+                <input
+                  type="password"
+                  className="field"
+                  placeholder={
+                    aiHasKey ? "tersimpan — isi untuk mengganti" : "sk-..."
+                  }
+                  value={aiApiKey}
+                  onChange={(e) => setAiApiKey(e.target.value)}
+                />
+              </div>
+              <button
+                onClick={handleSaveSettings}
+                className="btn btn-ghost w-full"
+                disabled={savingSettings}
+              >
+                {savingSettings ? "Menyimpan…" : "Simpan pengaturan"}
+              </button>
+            </div>
           </div>
 
           {preview && (

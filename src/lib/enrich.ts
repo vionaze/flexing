@@ -1,4 +1,5 @@
 import { scrapeUrl, type ScrapeResult } from "./scrape";
+import { getEffectiveAiSettings } from "./settings";
 import type { Track } from "./types";
 
 export interface EnrichResult {
@@ -80,11 +81,8 @@ function heuristicTags(scrape: ScrapeResult): string[] {
 }
 
 async function callLlm(scrape: ScrapeResult): Promise<AiEnrichPayload | null> {
-  const apiKey = process.env.AI_API_KEY;
+  const { apiKey, baseUrl, model } = await getEffectiveAiSettings();
   if (!apiKey) return null;
-
-  const baseUrl = process.env.AI_BASE_URL ?? "https://api.openai.com/v1";
-  const model = process.env.AI_MODEL ?? "gpt-4o-mini";
 
   const prompt = `Kamu adalah kurator portfolio. Berdasarkan konten URL berikut, buatkan metadata portfolio.
 
