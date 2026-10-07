@@ -11,6 +11,7 @@ export interface EnrichResult {
   tags: string[];
   track: Track;
   mediaType: MediaType;
+  roleDesc: string;
   image?: string;
   source: "ai" | "manual";
   scrape: ScrapeResult;
@@ -24,6 +25,7 @@ interface AiEnrichPayload {
   tags: string[];
   track: Track;
   mediaType: MediaType;
+  roleDesc: string;
 }
 
 function isTrack(value: unknown): value is Track {
@@ -110,7 +112,8 @@ Balas HANYA dengan JSON valid (tanpa markdown fence) dengan skema:
   "descriptionId": "deskripsi versi Bahasa Indonesia, 2-3 kalimat, maksimal 400 karakter",
   "tags": ["tag1", "tag2", "tag3"],
   "track": "si" | "web3",
-  "mediaType": "video" | "image"
+  "mediaType": "video" | "image",
+  "roleDesc": "what was done in this project (role/contribution), in ENGLISH, max 200 characters"
 }
 
 Semua teks wajib dua bahasa: title/description dalam ENGLISH,
@@ -174,6 +177,7 @@ Track "web3" untuk karya crypto / blockchain / DeFi / NFT.`;
       mediaType: isMediaType(parsed.mediaType)
         ? parsed.mediaType
         : detectMediaType(scrape.url),
+      roleDesc: String(parsed.roleDesc ?? scrape.description).slice(0, 240),
     };
   } catch {
     return null;
@@ -196,6 +200,7 @@ export async function enrichFromUrl(
       tags: ai.tags,
       track: trackHint ?? ai.track,
       mediaType: ai.mediaType,
+      roleDesc: ai.roleDesc,
       image: scrape.image,
       source: "ai",
       scrape,
@@ -214,6 +219,9 @@ export async function enrichFromUrl(
     tags: heuristicTags(scrape),
     track: trackHint ?? heuristicTrack(scrape),
     mediaType: detectMediaType(url),
+    roleDesc: scrape.description
+      ? `Worked on: ${scrape.description.slice(0, 180)}`
+      : `Worked on ${scrape.siteName ?? "this project"}.`,
     image: scrape.image,
     source: "manual",
     scrape,

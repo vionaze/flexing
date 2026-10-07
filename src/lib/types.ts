@@ -29,10 +29,10 @@ export interface PortfolioItem {
   date?: string;
   dateEnd?: string;
   keterangan?: string;
-  /* WEB3 */
-  chain?: string;
-  contract?: string;
-  gasSpent?: string;
+  /* WEB3: deskripsi kerja + durasi per tahun */
+  roleDesc?: string;
+  yearStart?: string;
+  yearEnd?: string;
   archived?: boolean;
   createdAt: string;
   updatedAt: string;

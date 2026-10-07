@@ -169,22 +169,16 @@ export function PortfolioCard({
             </div>
 
             {(() => {
+              const years =
+                item.track === "web3" && item.yearStart
+                  ? `${item.yearStart} – ${item.yearEnd === "now" ? "now" : item.yearEnd}`
+                  : null;
               const range = item.date
                 ? item.dateEnd
                   ? `${formatDate(item.date)} – ${formatDate(item.dateEnd)}`
                   : formatDate(item.date)
                 : null;
-              const parts = [
-                range,
-                item.category,
-                item.track === "web3" && item.chain ? `⛓ ${item.chain}` : null,
-                item.track === "web3" && item.contract
-                  ? shortContract(item.contract)
-                  : null,
-                item.track === "web3" && item.gasSpent
-                  ? `⛽ ${item.gasSpent}`
-                  : null,
-              ].filter(Boolean);
+              const parts = [years ?? range, item.category].filter(Boolean);
               return parts.length ? (
                 <p className="text-[0.68rem] font-medium uppercase tracking-[0.12em] text-text-4">
                   {parts.join(" · ")}
@@ -193,7 +187,9 @@ export function PortfolioCard({
             })()}
 
             <p className="flex-1 text-sm leading-relaxed text-text-2">
-              {description}
+              {item.track === "web3" && item.roleDesc
+                ? item.roleDesc
+                : description}
             </p>
 
             {item.keterangan && (

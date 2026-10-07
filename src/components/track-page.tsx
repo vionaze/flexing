@@ -175,17 +175,21 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
                           ? featured.titleId
                           : featured.title}
                       </h2>
+                      {featured.track === "web3" && featured.roleDesc && (
+                        <p className="mt-1 line-clamp-2 text-sm text-text-2">
+                          {featured.roleDesc}
+                        </p>
+                      )}
                       <p className="mt-1 text-xs text-text-4">
                         {[
-                          featured.date
-                            ? featured.dateEnd
-                              ? `${formatDateItem(featured.date)} – ${formatDateItem(featured.dateEnd)}`
-                              : formatDateItem(featured.date)
-                            : null,
+                          featured.track === "web3" && featured.yearStart
+                            ? `${featured.yearStart} – ${featured.yearEnd === "now" ? "now" : featured.yearEnd}`
+                            : featured.date
+                              ? featured.dateEnd
+                                ? `${formatDateItem(featured.date)} – ${formatDateItem(featured.dateEnd)}`
+                                : formatDateItem(featured.date)
+                              : null,
                           featured.category,
-                          featured.track === "web3" && featured.chain
-                            ? `⛓ ${featured.chain}`
-                            : null,
                         ]
                           .filter(Boolean)
                           .join(" · ")}

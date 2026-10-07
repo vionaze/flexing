@@ -50,9 +50,9 @@ export async function POST(request: Request) {
     date,
     dateEnd,
     keterangan,
-    chain,
-    contract,
-    gasSpent,
+    roleDesc,
+    yearStart,
+    yearEnd,
   } = body;
 
   if (!isTrack(track) || typeof title !== "string" || typeof description !== "string" || typeof url !== "string") {
@@ -79,9 +79,9 @@ export async function POST(request: Request) {
     date: typeof date === "string" ? date : undefined,
     dateEnd: typeof dateEnd === "string" ? dateEnd : undefined,
     keterangan: typeof keterangan === "string" ? keterangan : undefined,
-    chain: typeof chain === "string" ? chain : undefined,
-    contract: typeof contract === "string" ? contract : undefined,
-    gasSpent: typeof gasSpent === "string" ? gasSpent : undefined,
+    roleDesc: typeof roleDesc === "string" ? roleDesc : undefined,
+    yearStart: typeof yearStart === "string" ? yearStart : undefined,
+    yearEnd: typeof yearEnd === "string" ? yearEnd : undefined,
   });
 
   await appendLog({

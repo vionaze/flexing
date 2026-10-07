@@ -21,9 +21,9 @@ interface EnrichPreview {
   date?: string;
   dateEnd?: string;
   keterangan?: string;
-  chain?: string;
-  contract?: string;
-  gasSpent?: string;
+  roleDesc?: string;
+  yearStart?: string;
+  yearEnd?: string;
 }
 
 const trackLabel: Record<Track, string> = {
@@ -201,14 +201,14 @@ export function AdminDashboard({
             mediaUrl: preview.track === "si" ? preview.mediaUrl : undefined,
             mediaType: preview.track === "si" ? preview.mediaType : undefined,
             category: preview.category,
-            date: preview.date,
-            dateEnd: preview.dateEnd,
+            date: preview.track === "si" ? preview.date : undefined,
+            dateEnd: preview.track === "si" ? preview.dateEnd : undefined,
             keterangan: preview.keterangan,
-            chain: preview.track === "web3" ? preview.chain : undefined,
-            contract:
-              preview.track === "web3" ? preview.contract : undefined,
-            gasSpent:
-              preview.track === "web3" ? preview.gasSpent : undefined,
+            roleDesc:
+              preview.track === "web3" ? preview.roleDesc : undefined,
+            yearStart:
+              preview.track === "web3" ? preview.yearStart : undefined,
+            yearEnd: preview.track === "web3" ? preview.yearEnd : undefined,
           }),
         });
 
@@ -260,9 +260,9 @@ export function AdminDashboard({
       date: item.date,
       dateEnd: item.dateEnd,
       keterangan: item.keterangan,
-      chain: item.chain,
-      contract: item.contract,
-      gasSpent: item.gasSpent,
+      roleDesc: item.roleDesc,
+      yearStart: item.yearStart,
+      yearEnd: item.yearEnd,
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -628,46 +628,84 @@ export function AdminDashboard({
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="mb-2 block text-xs text-text-4">
-                          Chain / Jaringan
+                    <div>
+                      <div className="mb-2 flex items-center justify-between">
+                        <label className="block text-xs text-text-4">
+                          Gambar
                         </label>
-                        <input
-                          className="field"
-                          placeholder="Ethereum, Base, Solana…"
-                          value={preview.chain ?? ""}
-                          onChange={(e) =>
-                            setPreview({ ...preview, chain: e.target.value })
-                          }
-                        />
+                        {preview.image && (
+                          <span className="chip chip-success">otomatis</span>
+                        )}
                       </div>
-                      <div>
-                        <label className="mb-2 block text-xs text-text-4">
-                          Gas dibakar 🔥
-                        </label>
-                        <input
-                          className="field"
-                          placeholder="0.42 ETH"
-                          value={preview.gasSpent ?? ""}
-                          onChange={(e) =>
-                            setPreview({ ...preview, gasSpent: e.target.value })
-                          }
-                        />
-                      </div>
+                      <input
+                        className="field"
+                        placeholder="otomatis dari Generate — atau tempel URL gambar"
+                        value={preview.image ?? ""}
+                        onChange={(e) =>
+                          setPreview({ ...preview, image: e.target.value })
+                        }
+                      />
                     </div>
                     <div>
                       <label className="mb-2 block text-xs text-text-4">
-                        Alamat Kontrak
+                        Gue ngapain aja di proyek ini
                       </label>
-                      <input
-                        className="field font-mono text-sm"
-                        placeholder="0x…"
-                        value={preview.contract ?? ""}
+                      <textarea
+                        className="field min-h-[70px] resize-y"
+                        placeholder="otomatis oleh AI saat Generate — atau tulis manual"
+                        value={preview.roleDesc ?? ""}
                         onChange={(e) =>
-                          setPreview({ ...preview, contract: e.target.value })
+                          setPreview({ ...preview, roleDesc: e.target.value })
                         }
                       />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="mb-2 block text-xs text-text-4">
+                          Dari tahun
+                        </label>
+                        <select
+                          className="field"
+                          value={preview.yearStart ?? ""}
+                          onChange={(e) =>
+                            setPreview({
+                              ...preview,
+                              yearStart: e.target.value,
+                            })
+                          }
+                        >
+                          <option value="">—</option>
+                          {Array.from({ length: 20 }, (_, i) =>
+                            String(new Date().getFullYear() + 1 - i)
+                          ).map((y) => (
+                            <option key={y} value={y}>
+                              {y}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-xs text-text-4">
+                          Sampai
+                        </label>
+                        <select
+                          className="field"
+                          value={preview.yearEnd ?? ""}
+                          onChange={(e) =>
+                            setPreview({ ...preview, yearEnd: e.target.value })
+                          }
+                        >
+                          <option value="">—</option>
+                          <option value="now">Now</option>
+                          {Array.from({ length: 20 }, (_, i) =>
+                            String(new Date().getFullYear() + 1 - i)
+                          ).map((y) => (
+                            <option key={y} value={y}>
+                              {y}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   </div>
                 )}

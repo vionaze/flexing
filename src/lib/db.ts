@@ -59,9 +59,9 @@ export interface CreateItemInput {
   date?: string;
   dateEnd?: string;
   keterangan?: string;
-  chain?: string;
-  contract?: string;
-  gasSpent?: string;
+  roleDesc?: string;
+  yearStart?: string;
+  yearEnd?: string;
 }
 
 export async function createItem(input: CreateItemInput): Promise<PortfolioItem> {
@@ -84,9 +84,9 @@ export async function createItem(input: CreateItemInput): Promise<PortfolioItem>
     date: input.date,
     dateEnd: input.dateEnd,
     keterangan: input.keterangan,
-    chain: input.chain,
-    contract: input.contract,
-    gasSpent: input.gasSpent,
+    roleDesc: input.roleDesc,
+    yearStart: input.yearStart,
+    yearEnd: input.yearEnd,
     createdAt: now,
     updatedAt: now,
   };
@@ -108,9 +108,9 @@ export interface UpdateItemInput {
   date?: string;
   dateEnd?: string;
   keterangan?: string;
-  chain?: string;
-  contract?: string;
-  gasSpent?: string;
+  roleDesc?: string;
+  yearStart?: string;
+  yearEnd?: string;
   mediaUrl?: string;
   mediaType?: MediaType;
   archived?: boolean;

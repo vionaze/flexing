@@ -51,9 +51,9 @@ export async function PATCH(request: Request, { params }: Params) {
   if (typeof body.dateEnd === "string") patch.dateEnd = body.dateEnd;
   if (typeof body.keterangan === "string")
     patch.keterangan = body.keterangan;
-  if (typeof body.chain === "string") patch.chain = body.chain;
-  if (typeof body.contract === "string") patch.contract = body.contract;
-  if (typeof body.gasSpent === "string") patch.gasSpent = body.gasSpent;
+  if (typeof body.roleDesc === "string") patch.roleDesc = body.roleDesc;
+  if (typeof body.yearStart === "string") patch.yearStart = body.yearStart;
+  if (typeof body.yearEnd === "string") patch.yearEnd = body.yearEnd;
   if (typeof body.archived === "boolean") patch.archived = body.archived;
 
   const item = await updateItem(id, patch);
