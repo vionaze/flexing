@@ -3,11 +3,13 @@ import { listByTrack } from "@/lib/db";
 import { PortfolioCard, trackMeta } from "@/components/portfolio-card";
 import { Parallax, Reveal, DepthStage } from "@/components/parallax";
 import { Navbar } from "@/components/navbar";
+import { MediaEmbed } from "@/components/media-embed";
 import { getLang, t } from "@/lib/i18n";
 import type { Track } from "@/lib/types";
 
 export async function TrackPortfolioPage({ track }: { track: Track }) {
   const items = await listByTrack(track);
+  const [featured, ...rest] = items;
   const meta = trackMeta[track];
   const lang = await getLang();
   const dict = t(lang);
@@ -16,6 +18,19 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
   const gradient = isSi
     ? "linear-gradient(90deg,#99f6e4,#2dd4bf)"
     : "linear-gradient(90deg,#93c5fd,#3b82f6)";
+  function formatDateItem(iso: string): string {
+    try {
+      return new Intl.DateTimeFormat("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+      }).format(new Date(iso));
+    } catch {
+      return iso;
+    }
+  }
+
   const labelParts = meta.label.split(" ");
   const labelHead = labelParts.slice(0, -1).join(" ");
   const labelTail = labelParts[labelParts.length - 1];
@@ -72,7 +87,7 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
         </Parallax>
       </section>
 
-      {/* grid */}
+      {/* grid + featured porto terbaru */}
       <section className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-24">
         {items.length === 0 ? (
           <Reveal>
@@ -94,17 +109,87 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
             </div>
           </Reveal>
         ) : (
-          <DepthStage className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((item, i) => (
-              <PortfolioCard
-                key={item.id}
-                item={item}
-                track={track}
-                index={i}
-                lang={lang}
-              />
-            ))}
-          </DepthStage>
+          <>
+            {featured && (
+              <Reveal>
+                <div className="overflow-hidden rounded-[1.5rem] border border-border bg-surface/40">
+                  <div className="aspect-video w-full bg-bg-2">
+                    {featured.mediaUrl && featured.mediaType === "video" ? (
+                      <MediaEmbed
+                        url={featured.mediaUrl}
+                        className="h-full w-full"
+                      />
+                    ) : featured.mediaUrl && featured.mediaType === "image" ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={featured.mediaUrl}
+                        alt={featured.title}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : featured.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={featured.image}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div
+                        className={`h-full w-full bg-gradient-to-br ${
+                          isSi
+                            ? "from-si/20 via-transparent to-web3/5"
+                            : "from-web3/20 via-transparent to-si/5"
+                        }`}
+                      />
+                    )}
+                  </div>
+                  <div className="flex flex-wrap items-center justify-between gap-4 p-6 sm:p-8">
+                    <div className="min-w-0">
+                      <p className="label">
+                        {lang === "id" ? "karya terbaru" : "latest work"}
+                      </p>
+                      <h2 className="display mt-1.5 text-2xl sm:text-3xl">
+                        {lang === "id" && featured.titleId
+                          ? featured.titleId
+                          : featured.title}
+                      </h2>
+                      <p className="mt-1 text-xs text-text-4">
+                        {[
+                          featured.category,
+                          featured.date ? formatDateItem(featured.date) : null,
+                        ]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </p>
+                    </div>
+                    <a
+                      href={featured.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-ghost btn-sm shrink-0"
+                    >
+                      {lang === "id" ? "Lihat karya" : "View work"}{" "}
+                      <span aria-hidden>↗</span>
+                    </a>
+                  </div>
+                </div>
+              </Reveal>
+            )}
+
+            {rest.length > 0 && (
+              <DepthStage className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {rest.map((item, i) => (
+                  <PortfolioCard
+                    key={item.id}
+                    item={item}
+                    track={track}
+                    index={i + 1}
+                    lang={lang}
+                  />
+                ))}
+              </DepthStage>
+            )}
+          </>
         )}
       </section>
 

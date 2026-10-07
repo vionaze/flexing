@@ -1,5 +1,6 @@
 import type { Lang, PortfolioItem, Track } from "@/lib/types";
 import { Tilt3D, Parallax } from "./parallax";
+import { MediaEmbed } from "./media-embed";
 
 function formatDate(iso: string): string {
   try {
@@ -75,12 +76,9 @@ export function PortfolioCard({
             style={{ transformStyle: "preserve-3d" }}
           >
             {item.mediaUrl && item.mediaType === "video" ? (
-              <video
-                src={item.mediaUrl}
-                controls
-                preload="metadata"
-                className="h-full w-full object-cover"
-              />
+              <div className="h-full w-full">
+                <MediaEmbed url={item.mediaUrl} className="h-full w-full" />
+              </div>
             ) : item.mediaUrl && item.mediaType === "image" ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
