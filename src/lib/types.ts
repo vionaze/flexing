@@ -1,4 +1,5 @@
 export type Track = "si" | "web3";
+export type Lang = "en" | "id";
 
 export type MediaType = "video" | "image";
 
@@ -19,6 +20,8 @@ export interface PortfolioItem {
   tags: string[];
   image?: string;
   source: "ai" | "manual";
+  titleId?: string;
+  descriptionId?: string;
   /* SI: media + metadata tambahan */
   mediaUrl?: string;
   mediaType?: MediaType;

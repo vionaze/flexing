@@ -51,6 +51,8 @@ export interface CreateItemInput {
   tags?: string[];
   image?: string;
   source?: "ai" | "manual";
+  titleId?: string;
+  descriptionId?: string;
   mediaUrl?: string;
   mediaType?: MediaType;
   category?: string;
@@ -70,6 +72,8 @@ export async function createItem(input: CreateItemInput): Promise<PortfolioItem>
     tags: input.tags ?? [],
     image: input.image,
     source: input.source ?? "manual",
+    titleId: input.titleId,
+    descriptionId: input.descriptionId,
     mediaUrl: input.mediaUrl,
     mediaType: input.mediaType,
     category: input.category,
@@ -90,6 +94,8 @@ export interface UpdateItemInput {
   track?: Track;
   tags?: string[];
   image?: string;
+  titleId?: string;
+  descriptionId?: string;
   mediaUrl?: string;
   mediaType?: MediaType;
   category?: string;

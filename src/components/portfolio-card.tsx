@@ -1,4 +1,4 @@
-import type { PortfolioItem, Track } from "@/lib/types";
+import type { Lang, PortfolioItem, Track } from "@/lib/types";
 import { Tilt3D, Parallax } from "./parallax";
 
 function formatDate(iso: string): string {
@@ -54,12 +54,17 @@ export function PortfolioCard({
   item,
   track,
   index,
+  lang = "en",
 }: {
   item: PortfolioItem;
   track: Track;
   index: number;
+  lang?: Lang;
 }) {
   const meta = trackMeta[track];
+  const title = lang === "id" && item.titleId ? item.titleId : item.title;
+  const description =
+    lang === "id" && item.descriptionId ? item.descriptionId : item.description;
 
   return (
     <Parallax speed={index % 2 === 0 ? 0.05 : -0.05}>
@@ -143,7 +148,7 @@ export function PortfolioCard({
             style={{ transform: "translateZ(16px)" }}
           >
             <div className="flex items-start justify-between gap-3">
-              <h3 className="display text-lg leading-snug">{item.title}</h3>
+              <h3 className="display text-lg leading-snug">{title}</h3>
               <span className={meta.dotClass + " mt-2 shrink-0"} />
             </div>
 
@@ -156,7 +161,7 @@ export function PortfolioCard({
             )}
 
             <p className="flex-1 text-sm leading-relaxed text-text-2">
-              {item.description}
+              {description}
             </p>
 
             {item.keterangan && (
@@ -184,7 +189,7 @@ export function PortfolioCard({
               rel="noopener noreferrer"
               className="mt-1 inline-flex items-center gap-1.5 text-sm font-medium text-text-2 transition-colors hover:text-text"
             >
-              Lihat karya
+              {lang === "id" ? "Lihat karya" : "View work"}
               <span
                 aria-hidden
                 className="text-text-4 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-text"

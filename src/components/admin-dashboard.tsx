@@ -8,7 +8,9 @@ import { PORTO_CATEGORIES, type PortfolioItem, type Track } from "@/lib/types";
 
 interface EnrichPreview {
   title: string;
+  titleId?: string;
   description: string;
+  descriptionId?: string;
   tags: string[];
   track: Track;
   image?: string;
@@ -184,7 +186,9 @@ export function AdminDashboard({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             title: preview.title,
+            titleId: preview.titleId,
             description: preview.description,
+            descriptionId: preview.descriptionId,
             tags: preview.tags,
             track: preview.track,
             image: preview.image,
@@ -233,7 +237,9 @@ export function AdminDashboard({
     setTrack(item.track);
     setPreview({
       title: item.title,
+      titleId: item.titleId,
       description: item.description,
+      descriptionId: item.descriptionId,
       tags: item.tags,
       track: item.track,
       image: item.image,
@@ -473,7 +479,9 @@ export function AdminDashboard({
 
               <div className="mt-5 space-y-4">
                 <div>
-                  <label className="mb-2 block text-xs text-text-4">Judul</label>
+                  <label className="mb-2 block text-xs text-text-4">
+                    Judul (EN)
+                  </label>
                   <input
                     className="field"
                     value={preview.title}
@@ -484,13 +492,39 @@ export function AdminDashboard({
                 </div>
                 <div>
                   <label className="mb-2 block text-xs text-text-4">
-                    Deskripsi
+                    Judul (ID)
+                  </label>
+                  <input
+                    className="field"
+                    value={preview.titleId ?? ""}
+                    placeholder="opsional — kosongkan untuk pakai versi EN"
+                    onChange={(e) =>
+                      setPreview({ ...preview, titleId: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs text-text-4">
+                    Deskripsi (EN)
                   </label>
                   <textarea
                     className="field min-h-[110px] resize-y"
                     value={preview.description}
                     onChange={(e) =>
                       setPreview({ ...preview, description: e.target.value })
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs text-text-4">
+                    Deskripsi (ID)
+                  </label>
+                  <textarea
+                    className="field min-h-[70px] resize-y"
+                    value={preview.descriptionId ?? ""}
+                    placeholder="opsional — kosongkan untuk pakai versi EN"
+                    onChange={(e) =>
+                      setPreview({ ...preview, descriptionId: e.target.value })
                     }
                   />
                 </div>

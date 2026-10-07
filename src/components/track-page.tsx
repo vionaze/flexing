@@ -3,11 +3,14 @@ import { listByTrack } from "@/lib/db";
 import { PortfolioCard, trackMeta } from "@/components/portfolio-card";
 import { Parallax, Reveal, DepthStage } from "@/components/parallax";
 import { Navbar } from "@/components/navbar";
+import { getLang, t } from "@/lib/i18n";
 import type { Track } from "@/lib/types";
 
 export async function TrackPortfolioPage({ track }: { track: Track }) {
   const items = await listByTrack(track);
   const meta = trackMeta[track];
+  const lang = await getLang();
+  const dict = t(lang);
   const isSi = track === "si";
   const accent = isSi ? "var(--si)" : "var(--web3)";
   const gradient = isSi
@@ -20,7 +23,7 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
   return (
     <main className="aura relative min-h-screen overflow-x-hidden">
       {/* header — navbar sama dengan landing, track aktif tersorot */}
-      <Navbar active={track} sticky />
+      <Navbar active={track} sticky lang={lang} />
 
       {/* hero — parallax stack */}
       <section className="relative z-10 mx-auto w-full max-w-5xl px-6 py-16 md:py-20">
@@ -82,14 +85,11 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
                 <span className={meta.dotClass} />
               </div>
               <h2 className="font-doodle text-4xl" style={{ color: accent }}>
-                belum ada karya!
+                {dict.emptyTitle}
               </h2>
-              <p className="max-w-md text-text-3">
-                Karya untuk track {meta.label} akan muncul di sini dalam waktu
-                dekat.
-              </p>
+              <p className="max-w-md text-text-3">{dict.emptyBody}</p>
               <Link href="/" className="btn btn-ghost mt-2 lift">
-                Kembali ke beranda
+                {dict.backHome}
               </Link>
             </div>
           </Reveal>
@@ -101,6 +101,7 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
                 item={item}
                 track={track}
                 index={i}
+                lang={lang}
               />
             ))}
           </DepthStage>

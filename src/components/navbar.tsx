@@ -1,10 +1,20 @@
 import Link from "next/link";
+import { LangToggle } from "./lang-toggle";
+import type { Lang } from "@/lib/i18n";
 
 /**
  * Navbar bersama semua halaman publik.
  * active = track yang sedang dibuka (garis bawah permanen warna track).
  */
-export function Navbar({ active, sticky = false }: { active?: "si" | "web3"; sticky?: boolean }) {
+export function Navbar({
+  active,
+  sticky = false,
+  lang = "en",
+}: {
+  active?: "si" | "web3";
+  sticky?: boolean;
+  lang?: Lang;
+}) {
   const base =
     "border-b-2 px-1 pb-1 pt-0.5 font-mono text-[0.68rem] uppercase tracking-[0.14em] transition-colors sm:px-2 sm:text-xs";
 
@@ -18,29 +28,32 @@ export function Navbar({ active, sticky = false }: { active?: "si" | "web3"; sti
             FEYBER
           </span>
         </Link>
-        <nav className="flex items-center gap-1 sm:gap-3">
-          <Link
-            href="/si"
-            className={`${base} ${
-              active === "si"
-                ? "border-si text-text"
-                : "border-transparent text-text-3 hover:border-si hover:text-text"
-            }`}
-          >
-            <span className="sm:hidden">SI</span>
-            <span className="hidden sm:inline">Super Intelligence</span>
-          </Link>
-          <Link
-            href="/web3"
-            className={`${base} ${
-              active === "web3"
-                ? "border-web3 text-text"
-                : "border-transparent text-text-3 hover:border-web3 hover:text-text"
-            }`}
-          >
-            WEB3
-          </Link>
-        </nav>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <nav className="flex items-center gap-1 sm:gap-3">
+            <Link
+              href="/si"
+              className={`${base} ${
+                active === "si"
+                  ? "border-si text-text"
+                  : "border-transparent text-text-3 hover:border-si hover:text-text"
+              }`}
+            >
+              <span className="sm:hidden">SI</span>
+              <span className="hidden sm:inline">Super Intelligence</span>
+            </Link>
+            <Link
+              href="/web3"
+              className={`${base} ${
+                active === "web3"
+                  ? "border-web3 text-text"
+                  : "border-transparent text-text-3 hover:border-web3 hover:text-text"
+              }`}
+            >
+              WEB3
+            </Link>
+          </nav>
+          <LangToggle lang={lang} />
+        </div>
       </div>
     </header>
   );

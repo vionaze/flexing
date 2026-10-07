@@ -42,6 +42,8 @@ export async function POST(request: Request) {
     tags,
     image,
     source,
+    titleId,
+    descriptionId,
     mediaUrl,
     mediaType,
     category,
@@ -64,6 +66,8 @@ export async function POST(request: Request) {
     tags: Array.isArray(tags) ? tags.map(String) : [],
     image: typeof image === "string" ? image : undefined,
     source: source === "ai" ? "ai" : "manual",
+    titleId: typeof titleId === "string" ? titleId : undefined,
+    descriptionId: typeof descriptionId === "string" ? descriptionId : undefined,
     mediaUrl: typeof mediaUrl === "string" ? mediaUrl : undefined,
     mediaType:
       mediaType === "video" || mediaType === "image" ? mediaType : undefined,

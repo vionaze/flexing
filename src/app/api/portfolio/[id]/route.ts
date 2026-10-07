@@ -38,6 +38,9 @@ export async function PATCH(request: Request, { params }: Params) {
   if (typeof body.description === "string") patch.description = body.description;
   if (typeof body.url === "string") patch.url = body.url;
   if (typeof body.image === "string") patch.image = body.image;
+  if (typeof body.titleId === "string") patch.titleId = body.titleId;
+  if (typeof body.descriptionId === "string")
+    patch.descriptionId = body.descriptionId;
   if (isTrack(body.track)) patch.track = body.track;
   if (Array.isArray(body.tags)) patch.tags = body.tags.map(String);
   if (typeof body.mediaUrl === "string") patch.mediaUrl = body.mediaUrl;

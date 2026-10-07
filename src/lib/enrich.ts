@@ -5,7 +5,9 @@ import type { Track } from "./types";
 
 export interface EnrichResult {
   title: string;
+  titleId: string;
   description: string;
+  descriptionId: string;
   tags: string[];
   track: Track;
   mediaType: MediaType;
@@ -16,7 +18,9 @@ export interface EnrichResult {
 
 interface AiEnrichPayload {
   title: string;
+  titleId: string;
   description: string;
+  descriptionId: string;
   tags: string[];
   track: Track;
   mediaType: MediaType;
@@ -100,13 +104,17 @@ Excerpt konten: ${scrape.textExcerpt.slice(0, 1500)}
 
 Balas HANYA dengan JSON valid (tanpa markdown fence) dengan skema:
 {
-  "title": "judul portfolio yang menarik, maksimal 80 karakter",
-  "description": "deskripsi portfolio 2-3 kalimat dalam bahasa Indonesia, profesional, maksimal 400 karakter",
+  "title": "portfolio title in ENGLISH, max 80 characters",
+  "titleId": "judul versi Bahasa Indonesia, maksimal 80 karakter",
+  "description": "portfolio description in ENGLISH, 2-3 sentences, max 400 characters",
+  "descriptionId": "deskripsi versi Bahasa Indonesia, 2-3 kalimat, maksimal 400 karakter",
   "tags": ["tag1", "tag2", "tag3"],
   "track": "si" | "web3",
   "mediaType": "video" | "image"
 }
 
+Semua teks wajib dua bahasa: title/description dalam ENGLISH,
+titleId/descriptionId dalam Bahasa Indonesia.
 mediaType: "video" jika URL utama adalah video (YouTube, Vimeo, file .mp4/.webm),
 "image" jika gambar atau halaman web biasa.
 
@@ -156,7 +164,11 @@ Track "web3" untuk karya crypto / blockchain / DeFi / NFT.`;
     const parsed = JSON.parse(content) as Partial<AiEnrichPayload>;
     return {
       title: String(parsed.title ?? scrape.title),
+      titleId: String(parsed.titleId ?? parsed.title ?? scrape.title),
       description: String(parsed.description ?? scrape.description),
+      descriptionId: String(
+        parsed.descriptionId ?? parsed.description ?? scrape.description
+      ),
       tags: Array.isArray(parsed.tags) ? parsed.tags.map(String).slice(0, 8) : [],
       track: isTrack(parsed.track) ? parsed.track : heuristicTrack(scrape),
       mediaType: isMediaType(parsed.mediaType)
@@ -178,7 +190,9 @@ export async function enrichFromUrl(
   if (ai) {
     return {
       title: ai.title,
+      titleId: ai.titleId,
       description: ai.description,
+      descriptionId: ai.descriptionId,
       tags: ai.tags,
       track: trackHint ?? ai.track,
       mediaType: ai.mediaType,
@@ -190,7 +204,11 @@ export async function enrichFromUrl(
 
   return {
     title: scrape.title.slice(0, 80),
+    titleId: scrape.title.slice(0, 80),
     description:
+      scrape.description ||
+      `Dokumentasi karya dari ${scrape.siteName ?? "sumber eksternal"}.`,
+    descriptionId:
       scrape.description ||
       `Dokumentasi karya dari ${scrape.siteName ?? "sumber eksternal"}.`,
     tags: heuristicTags(scrape),

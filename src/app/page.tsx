@@ -11,10 +11,12 @@ import { UnicornAura, AURA_PROJECT_ID } from "@/components/unicorn-aura";
 import { LiquidFill } from "@/components/liquid-card";
 import { AuraButton } from "@/components/aura-button";
 import { Navbar } from "@/components/navbar";
+import { getLang } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
 export default async function LandingPage() {
+  const lang = await getLang();
   const [siItems, web3Items] = await Promise.all([
     listByTrack("si"),
     listByTrack("web3"),
@@ -37,7 +39,7 @@ export default async function LandingPage() {
 
       {/* ============ HERO ============ */}
       <div className="relative min-h-[92vh] overflow-hidden">
-        <Navbar />
+        <Navbar lang={lang} />
 
         {/* readability veil — meredupkan aura agar teks terbaca */}
         <div
