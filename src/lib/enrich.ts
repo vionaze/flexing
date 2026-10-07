@@ -103,33 +103,43 @@ Track "si" untuk karya Super Intelligence / AI / data / engineering.
 Track "web3" untuk karya crypto / blockchain / DeFi / NFT.`;
 
   try {
-    const res = await fetch(`${baseUrl}/chat/completions`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
+    const messages = [
+      {
+        role: "system" as const,
+        content:
+          "Kamu adalah asisten kurator portfolio yang hanya membalas JSON valid.",
       },
-      body: JSON.stringify({
+      { role: "user" as const, content: prompt },
+    ];
+
+    /* response_format json_object tidak didukung semua model open —
+       coba dengan, lalu tanpa */
+    let content: string | null = null;
+    for (const useFormat of [true, false]) {
+      const body: Record<string, unknown> = {
         model,
         temperature: 0.7,
-        response_format: { type: "json_object" },
-        messages: [
-          {
-            role: "system",
-            content:
-              "Kamu adalah asisten kurator portfolio yang hanya membalas JSON valid.",
-          },
-          { role: "user", content: prompt },
-        ],
-      }),
-    });
+        messages,
+      };
+      if (useFormat) body.response_format = { type: "json_object" };
 
-    if (!res.ok) return null;
+      const res = await fetch(`${baseUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify(body),
+      });
 
-    const data = (await res.json()) as {
-      choices?: Array<{ message?: { content?: string } }>;
-    };
-    const content = data.choices?.[0]?.message?.content;
+      if (!res.ok) continue;
+
+      const data = (await res.json()) as {
+        choices?: Array<{ message?: { content?: string } }>;
+      };
+      content = data.choices?.[0]?.message?.content ?? null;
+      if (content) break;
+    }
     if (!content) return null;
 
     const parsed = JSON.parse(content) as Partial<AiEnrichPayload>;
