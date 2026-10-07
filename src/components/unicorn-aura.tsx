@@ -71,16 +71,40 @@ export function UnicornAura({
     const el = ref.current;
     if (!el) return;
 
-    ensureScript(() => {
-      // init ulang untuk node yang baru mount
-      if (window.UnicornStudio?.init) {
-        try {
-          window.UnicornStudio.init();
-        } catch {
-          /* already running */
+    let cancelled = false;
+
+    const start = () => {
+      if (cancelled) return;
+      ensureScript(() => {
+        // init ulang untuk node yang baru mount
+        if (window.UnicornStudio?.init) {
+          try {
+            window.UnicornStudio.init();
+          } catch {
+            /* already running */
+          }
         }
-      }
-    });
+      });
+    };
+
+    /* script WebGL paling berat — tunda sampai halaman interaktif */
+    const w = window as unknown as {
+      requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+
+    if (typeof w.requestIdleCallback === "function") {
+      const id = w.requestIdleCallback(start, { timeout: 3500 });
+      return () => {
+        cancelled = true;
+        w.cancelIdleCallback?.(id);
+      };
+    }
+    const t = window.setTimeout(start, 1500);
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+    };
   }, []);
 
   return (
