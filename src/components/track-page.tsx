@@ -8,7 +8,13 @@ import { detectMediaType, isPlayableVideoUrl } from "@/lib/media";
 import { getLang, t } from "@/lib/i18n";
 import type { Track } from "@/lib/types";
 
-export async function TrackPortfolioPage({ track }: { track: Track }) {
+export async function TrackPortfolioPage({
+  track,
+  underConstruction = false,
+}: {
+  track: Track;
+  underConstruction?: boolean;
+}) {
   const items = await listByTrack(track);
   const [featured, ...rest] = items;
   const meta = trackMeta[track];
@@ -90,7 +96,48 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
 
       {/* grid + featured porto terbaru */}
       <section className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-24">
-        {items.length === 0 ? (
+        {underConstruction ? (
+          <Reveal>
+            <div className="relative flex flex-col items-center gap-5 overflow-hidden rounded-[1.5rem] border border-border bg-surface/40 px-8 py-28 text-center">
+              <div
+                aria-hidden
+                className="absolute inset-0 opacity-20"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px)",
+                  backgroundSize: "28px 28px",
+                  maskImage:
+                    "radial-gradient(ellipse at center, black 30%, transparent 75%)",
+                  WebkitMaskImage:
+                    "radial-gradient(ellipse at center, black 30%, transparent 75%)",
+                }}
+              />
+              <span
+                aria-hidden
+                className="animate-float-slow absolute left-[12%] top-10 text-4xl"
+              >
+                🚧
+              </span>
+              <span
+                aria-hidden
+                className="animate-float-slow absolute bottom-10 right-[12%] text-4xl"
+                style={{ animationDelay: "1.2s" }}
+              >
+                🚧
+              </span>
+              <h2
+                className="font-doodle relative text-5xl sm:text-6xl"
+                style={{ color: accent }}
+              >
+                {dict.constructionTitle}
+              </h2>
+              <p className="relative max-w-md text-lg text-text-2">
+                {dict.constructionBody}
+              </p>
+              <span className="chip relative">{dict.eta}</span>
+            </div>
+          </Reveal>
+        ) : items.length === 0 ? (
           <Reveal>
             <div className="lift flex flex-col items-center gap-4 rounded-[1.25rem] border border-border bg-surface px-8 py-20 text-center">
               <div

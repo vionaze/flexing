@@ -8,5 +8,5 @@ export const metadata = {
 };
 
 export default function Web3Page() {
-  return <TrackPortfolioPage track="web3" />;
+  return <TrackPortfolioPage track="web3" underConstruction />;
 }

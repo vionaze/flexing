@@ -23,6 +23,10 @@ const DICT = {
     emptyBody: "Karya untuk track ini akan muncul di sini dalam waktu dekat.",
     blurbSi: "AI, data, engineering, dan karya riset.",
     blurbWeb3: "Blockchain, DeFi, NFT, dan on-chain product.",
+    constructionTitle: "sedang dibangun!",
+    constructionBody:
+      "Sesuatu yang on-chain sedang dibangun di sini — kontrak, dApps, eksperimen degen. Stay tuned.",
+    eta: "ETA: soon™",
   },
   en: {
     curatedWorks: "curated works",
@@ -32,6 +36,10 @@ const DICT = {
     emptyBody: "Works for this track will appear here soon.",
     blurbSi: "AI, data, engineering, and research works.",
     blurbWeb3: "Blockchain, DeFi, NFT, and on-chain products.",
+    constructionTitle: "under construction!",
+    constructionBody:
+      "Something on-chain is being built here — contracts, dApps, degen experiments. Stay tuned.",
+    eta: "ETA: soon™",
   },
 } as const;
 
