@@ -40,6 +40,10 @@ export function AdminDashboard({
   const [aiApiKey, setAiApiKey] = useState("");
   const [aiHasKey, setAiHasKey] = useState(false);
   const [savingSettings, startSaveSettings] = useTransition();
+  const [testing, startTest] = useTransition();
+  const [testResult, setTestResult] = useState<{ ok: boolean; text: string } | null>(
+    null
+  );
 
   useEffect(() => {
     fetch("/api/settings")
@@ -52,6 +56,41 @@ export function AdminDashboard({
       })
       .catch(() => {});
   }, []);
+
+  async function handleTestConnection() {
+    setTestResult(null);
+    setError(null);
+
+    startTest(async () => {
+      try {
+        const res = await fetch("/api/settings/test", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            aiBaseUrl,
+            aiModel,
+            aiApiKey: aiApiKey || undefined,
+          }),
+        });
+        const data = await res.json();
+        const ms = data.ms ? ` · ${data.ms}ms` : "";
+
+        if (data.ok) {
+          setTestResult({
+            ok: true,
+            text: `Koneksi OK${ms} — model ${data.model ?? aiModel ?? "default"} merespons`,
+          });
+        } else {
+          setTestResult({
+            ok: false,
+            text: `${data.error ?? "Gagal terhubung"}${ms}`,
+          });
+        }
+      } catch {
+        setTestResult({ ok: false, text: "Terjadi kesalahan jaringan" });
+      }
+    });
+  }
 
   async function handleSaveSettings() {
     setError(null);
@@ -344,13 +383,35 @@ export function AdminDashboard({
                   onChange={(e) => setAiApiKey(e.target.value)}
                 />
               </div>
-              <button
-                onClick={handleSaveSettings}
-                className="btn btn-ghost w-full"
-                disabled={savingSettings}
-              >
-                {savingSettings ? "Menyimpan…" : "Simpan pengaturan"}
-              </button>
+              <div className="flex gap-2.5">
+                <button
+                  onClick={handleTestConnection}
+                  className="btn btn-ghost flex-1"
+                  disabled={testing}
+                >
+                  {testing ? "Menguji…" : "Test koneksi"}
+                </button>
+                <button
+                  onClick={handleSaveSettings}
+                  className="btn btn-ghost flex-1"
+                  disabled={savingSettings}
+                >
+                  {savingSettings ? "Menyimpan…" : "Simpan"}
+                </button>
+              </div>
+
+              {testResult && (
+                <p
+                  className={`rounded-xl border px-3.5 py-2.5 text-sm ${
+                    testResult.ok
+                      ? "border-success/35 bg-success/10 text-success"
+                      : "border-danger/35 bg-danger/10 text-danger"
+                  }`}
+                >
+                  {testResult.ok ? "✓ " : "✗ "}
+                  {testResult.text}
+                </p>
+              )}
             </div>
           </div>
 

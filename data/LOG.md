@@ -59,3 +59,8 @@ Format entri:
 ## 2026-10-04T15:37:21.628Z — login
 - siapa: admin
 - apa: Login studio berhasil
+
+## 2026-10-07T05:47:24.132Z — settings
+- siapa: admin
+- apa: Pengaturan AI diperbarui
+- detail: baseUrl=https://api.gmi-serving.com/v1 model=openai/gpt-6.1-sol key=diubah
