@@ -1,6 +1,19 @@
 import type { PortfolioItem, Track } from "@/lib/types";
 import { Tilt3D, Parallax } from "./parallax";
 
+function formatDate(iso: string): string {
+  try {
+    return new Intl.DateTimeFormat("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(new Date(iso));
+  } catch {
+    return iso;
+  }
+}
+
 export const trackMeta: Record<
   Track,
   {
@@ -56,7 +69,21 @@ export function PortfolioCard({
             className="relative h-40 w-full overflow-hidden bg-bg-2"
             style={{ transformStyle: "preserve-3d" }}
           >
-            {item.image ? (
+            {item.mediaUrl && item.mediaType === "video" ? (
+              <video
+                src={item.mediaUrl}
+                controls
+                preload="metadata"
+                className="h-full w-full object-cover"
+              />
+            ) : item.mediaUrl && item.mediaType === "image" ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={item.mediaUrl}
+                alt={item.title}
+                className="h-full w-full object-cover"
+              />
+            ) : item.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={item.image}
@@ -120,9 +147,23 @@ export function PortfolioCard({
               <span className={meta.dotClass + " mt-2 shrink-0"} />
             </div>
 
+            {(item.date || item.category) && (
+              <p className="text-[0.68rem] font-medium uppercase tracking-[0.12em] text-text-4">
+                {item.date ? formatDate(item.date) : ""}
+                {item.date && item.category ? " · " : ""}
+                {item.category}
+              </p>
+            )}
+
             <p className="flex-1 text-sm leading-relaxed text-text-2">
               {item.description}
             </p>
+
+            {item.keterangan && (
+              <p className="text-xs leading-relaxed text-text-4">
+                {item.keterangan}
+              </p>
+            )}
 
             {item.tags.length > 0 && (
               <div className="flex flex-wrap gap-1.5">

@@ -34,7 +34,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Body tidak valid" }, { status: 400 });
   }
 
-  const { track, title, description, url, tags, image, source } = body;
+  const {
+    track,
+    title,
+    description,
+    url,
+    tags,
+    image,
+    source,
+    mediaUrl,
+    mediaType,
+    category,
+    date,
+    keterangan,
+  } = body;
 
   if (!isTrack(track) || typeof title !== "string" || typeof description !== "string" || typeof url !== "string") {
     return NextResponse.json(
@@ -51,6 +64,12 @@ export async function POST(request: Request) {
     tags: Array.isArray(tags) ? tags.map(String) : [],
     image: typeof image === "string" ? image : undefined,
     source: source === "ai" ? "ai" : "manual",
+    mediaUrl: typeof mediaUrl === "string" ? mediaUrl : undefined,
+    mediaType:
+      mediaType === "video" || mediaType === "image" ? mediaType : undefined,
+    category: typeof category === "string" ? category : undefined,
+    date: typeof date === "string" ? date : undefined,
+    keterangan: typeof keterangan === "string" ? keterangan : undefined,
   });
 
   await appendLog({

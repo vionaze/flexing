@@ -40,6 +40,13 @@ export async function PATCH(request: Request, { params }: Params) {
   if (typeof body.image === "string") patch.image = body.image;
   if (isTrack(body.track)) patch.track = body.track;
   if (Array.isArray(body.tags)) patch.tags = body.tags.map(String);
+  if (typeof body.mediaUrl === "string") patch.mediaUrl = body.mediaUrl;
+  if (body.mediaType === "video" || body.mediaType === "image")
+    patch.mediaType = body.mediaType;
+  if (typeof body.category === "string") patch.category = body.category;
+  if (typeof body.date === "string") patch.date = body.date;
+  if (typeof body.keterangan === "string")
+    patch.keterangan = body.keterangan;
 
   const item = await updateItem(id, patch);
   if (!item) {

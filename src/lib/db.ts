@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
-import type { PortfolioData, PortfolioItem, Track } from "./types";
+import type { MediaType, PortfolioData, PortfolioItem, Track } from "./types";
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const PORTFOLIO_PATH = path.join(DATA_DIR, "portfolio.json");
@@ -51,6 +51,11 @@ export interface CreateItemInput {
   tags?: string[];
   image?: string;
   source?: "ai" | "manual";
+  mediaUrl?: string;
+  mediaType?: MediaType;
+  category?: string;
+  date?: string;
+  keterangan?: string;
 }
 
 export async function createItem(input: CreateItemInput): Promise<PortfolioItem> {
@@ -65,6 +70,11 @@ export async function createItem(input: CreateItemInput): Promise<PortfolioItem>
     tags: input.tags ?? [],
     image: input.image,
     source: input.source ?? "manual",
+    mediaUrl: input.mediaUrl,
+    mediaType: input.mediaType,
+    category: input.category,
+    date: input.date,
+    keterangan: input.keterangan,
     createdAt: now,
     updatedAt: now,
   };
@@ -80,6 +90,11 @@ export interface UpdateItemInput {
   track?: Track;
   tags?: string[];
   image?: string;
+  mediaUrl?: string;
+  mediaType?: MediaType;
+  category?: string;
+  date?: string;
+  keterangan?: string;
 }
 
 export async function updateItem(

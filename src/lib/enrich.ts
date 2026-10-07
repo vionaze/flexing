@@ -1,5 +1,6 @@
 import { scrapeUrl, type ScrapeResult } from "./scrape";
 import { getEffectiveAiSettings } from "./settings";
+import { detectMediaType, type MediaType } from "./media";
 import type { Track } from "./types";
 
 export interface EnrichResult {
@@ -7,6 +8,7 @@ export interface EnrichResult {
   description: string;
   tags: string[];
   track: Track;
+  mediaType: MediaType;
   image?: string;
   source: "ai" | "manual";
   scrape: ScrapeResult;
@@ -17,10 +19,15 @@ interface AiEnrichPayload {
   description: string;
   tags: string[];
   track: Track;
+  mediaType: MediaType;
 }
 
 function isTrack(value: unknown): value is Track {
   return value === "si" || value === "web3";
+}
+
+function isMediaType(value: unknown): value is MediaType {
+  return value === "video" || value === "image";
 }
 
 function heuristicTrack(scrape: ScrapeResult): Track {
@@ -96,8 +103,12 @@ Balas HANYA dengan JSON valid (tanpa markdown fence) dengan skema:
   "title": "judul portfolio yang menarik, maksimal 80 karakter",
   "description": "deskripsi portfolio 2-3 kalimat dalam bahasa Indonesia, profesional, maksimal 400 karakter",
   "tags": ["tag1", "tag2", "tag3"],
-  "track": "si" | "web3"
+  "track": "si" | "web3",
+  "mediaType": "video" | "image"
 }
+
+mediaType: "video" jika URL utama adalah video (YouTube, Vimeo, file .mp4/.webm),
+"image" jika gambar atau halaman web biasa.
 
 Track "si" untuk karya Super Intelligence / AI / data / engineering.
 Track "web3" untuk karya crypto / blockchain / DeFi / NFT.`;
@@ -148,6 +159,9 @@ Track "web3" untuk karya crypto / blockchain / DeFi / NFT.`;
       description: String(parsed.description ?? scrape.description),
       tags: Array.isArray(parsed.tags) ? parsed.tags.map(String).slice(0, 8) : [],
       track: isTrack(parsed.track) ? parsed.track : heuristicTrack(scrape),
+      mediaType: isMediaType(parsed.mediaType)
+        ? parsed.mediaType
+        : detectMediaType(scrape.url),
     };
   } catch {
     return null;
@@ -167,6 +181,7 @@ export async function enrichFromUrl(
       description: ai.description,
       tags: ai.tags,
       track: trackHint ?? ai.track,
+      mediaType: ai.mediaType,
       image: scrape.image,
       source: "ai",
       scrape,
@@ -180,6 +195,7 @@ export async function enrichFromUrl(
       `Dokumentasi karya dari ${scrape.siteName ?? "sumber eksternal"}.`,
     tags: heuristicTags(scrape),
     track: trackHint ?? heuristicTrack(scrape),
+    mediaType: detectMediaType(url),
     image: scrape.image,
     source: "manual",
     scrape,

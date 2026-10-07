@@ -1,5 +1,15 @@
 export type Track = "si" | "web3";
 
+export type MediaType = "video" | "image";
+
+export const PORTO_CATEGORIES = [
+  "porto video",
+  "porto cpp",
+  "porto contest winner",
+  "award",
+  "porto gambar",
+] as const;
+
 export interface PortfolioItem {
   id: string;
   track: Track;
@@ -9,6 +19,12 @@ export interface PortfolioItem {
   tags: string[];
   image?: string;
   source: "ai" | "manual";
+  /* SI: media + metadata tambahan */
+  mediaUrl?: string;
+  mediaType?: MediaType;
+  category?: string;
+  date?: string;
+  keterangan?: string;
   createdAt: string;
   updatedAt: string;
 }

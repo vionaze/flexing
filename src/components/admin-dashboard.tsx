@@ -3,7 +3,8 @@
 import { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { PortfolioItem, Track } from "@/lib/types";
+import { detectMediaType } from "@/lib/media";
+import { PORTO_CATEGORIES, type PortfolioItem, type Track } from "@/lib/types";
 
 interface EnrichPreview {
   title: string;
@@ -12,6 +13,11 @@ interface EnrichPreview {
   track: Track;
   image?: string;
   source: "ai" | "manual";
+  mediaUrl?: string;
+  mediaType?: "video" | "image";
+  category?: string;
+  date?: string;
+  keterangan?: string;
 }
 
 const trackLabel: Record<Track, string> = {
@@ -183,6 +189,11 @@ export function AdminDashboard({
             image: preview.image,
             url,
             source: preview.source,
+            mediaUrl: preview.track === "si" ? preview.mediaUrl : undefined,
+            mediaType: preview.track === "si" ? preview.mediaType : undefined,
+            category: preview.category,
+            date: preview.date,
+            keterangan: preview.keterangan,
           }),
         });
 
@@ -226,6 +237,11 @@ export function AdminDashboard({
       track: item.track,
       image: item.image,
       source: item.source,
+      mediaUrl: item.mediaUrl,
+      mediaType: item.mediaType,
+      category: item.category,
+      date: item.date,
+      keterangan: item.keterangan,
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -447,6 +463,89 @@ export function AdminDashboard({
                     }
                   />
                 </div>
+                {preview.track === "si" && (
+                  <div>
+                    <div className="mb-2 flex items-center justify-between">
+                      <label className="block text-xs text-text-4">
+                        URL Video / Gambar
+                      </label>
+                      {preview.mediaUrl && (
+                        <span
+                          className={`chip ${
+                            preview.mediaType === "video"
+                              ? "chip-web3"
+                              : "chip-si"
+                          }`}
+                        >
+                          {preview.mediaType === "video" ? "Video" : "Gambar"}
+                        </span>
+                      )}
+                    </div>
+                    <input
+                      className="field"
+                      placeholder="https://youtube.com/watch?v=... atau URL gambar"
+                      value={preview.mediaUrl ?? ""}
+                      onChange={(e) =>
+                        setPreview({
+                          ...preview,
+                          mediaUrl: e.target.value,
+                          mediaType: e.target.value
+                            ? detectMediaType(e.target.value)
+                            : undefined,
+                        })
+                      }
+                    />
+                  </div>
+                )}
+
+                <div>
+                  <label className="mb-2 block text-xs text-text-4">
+                    Kategori
+                  </label>
+                  <select
+                    className="field"
+                    value={preview.category ?? ""}
+                    onChange={(e) =>
+                      setPreview({ ...preview, category: e.target.value })
+                    }
+                  >
+                    <option value="">— pilih kategori —</option>
+                    {PORTO_CATEGORIES.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs text-text-4">
+                    Tanggal
+                  </label>
+                  <input
+                    type="date"
+                    className="field"
+                    value={preview.date ?? ""}
+                    onChange={(e) =>
+                      setPreview({ ...preview, date: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs text-text-4">
+                    Keterangan
+                  </label>
+                  <textarea
+                    className="field min-h-[70px] resize-y"
+                    placeholder="Catatan singkat tambahan (opsional)"
+                    value={preview.keterangan ?? ""}
+                    onChange={(e) =>
+                      setPreview({ ...preview, keterangan: e.target.value })
+                    }
+                  />
+                </div>
+
                 <div>
                   <label className="mb-2 block text-xs text-text-4">
                     Tags (pisahkan dengan koma)
