@@ -19,7 +19,11 @@ interface EnrichPreview {
   mediaType?: "video" | "image";
   category?: string;
   date?: string;
+  dateEnd?: string;
   keterangan?: string;
+  chain?: string;
+  contract?: string;
+  gasSpent?: string;
 }
 
 const trackLabel: Record<Track, string> = {
@@ -198,7 +202,13 @@ export function AdminDashboard({
             mediaType: preview.track === "si" ? preview.mediaType : undefined,
             category: preview.category,
             date: preview.date,
+            dateEnd: preview.dateEnd,
             keterangan: preview.keterangan,
+            chain: preview.track === "web3" ? preview.chain : undefined,
+            contract:
+              preview.track === "web3" ? preview.contract : undefined,
+            gasSpent:
+              preview.track === "web3" ? preview.gasSpent : undefined,
           }),
         });
 
@@ -248,7 +258,11 @@ export function AdminDashboard({
       mediaType: item.mediaType,
       category: item.category,
       date: item.date,
+      dateEnd: item.dateEnd,
       keterangan: item.keterangan,
+      chain: item.chain,
+      contract: item.contract,
+      gasSpent: item.gasSpent,
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -583,27 +597,88 @@ export function AdminDashboard({
                   </select>
                 </div>
 
-                <div>
-                  <label className="mb-2 block text-xs text-text-4">
-                    Tanggal
-                  </label>
-                  <input
-                    type="date"
-                    className="field"
-                    value={preview.date ?? ""}
-                    onChange={(e) =>
-                      setPreview({ ...preview, date: e.target.value })
-                    }
-                  />
-                </div>
+                {preview.track === "si" ? (
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="mb-2 block text-xs text-text-4">
+                        Dari
+                      </label>
+                      <input
+                        type="date"
+                        className="field"
+                        value={preview.date ?? ""}
+                        onChange={(e) =>
+                          setPreview({ ...preview, date: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-xs text-text-4">
+                        Sampai
+                      </label>
+                      <input
+                        type="date"
+                        className="field"
+                        value={preview.dateEnd ?? ""}
+                        onChange={(e) =>
+                          setPreview({ ...preview, dateEnd: e.target.value })
+                        }
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="mb-2 block text-xs text-text-4">
+                          Chain / Jaringan
+                        </label>
+                        <input
+                          className="field"
+                          placeholder="Ethereum, Base, Solana…"
+                          value={preview.chain ?? ""}
+                          onChange={(e) =>
+                            setPreview({ ...preview, chain: e.target.value })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="mb-2 block text-xs text-text-4">
+                          Gas dibakar 🔥
+                        </label>
+                        <input
+                          className="field"
+                          placeholder="0.42 ETH"
+                          value={preview.gasSpent ?? ""}
+                          onChange={(e) =>
+                            setPreview({ ...preview, gasSpent: e.target.value })
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-xs text-text-4">
+                        Alamat Kontrak
+                      </label>
+                      <input
+                        className="field font-mono text-sm"
+                        placeholder="0x…"
+                        value={preview.contract ?? ""}
+                        onChange={(e) =>
+                          setPreview({ ...preview, contract: e.target.value })
+                        }
+                      />
+                    </div>
+                  </div>
+                )}
 
                 <div>
                   <label className="mb-2 block text-xs text-text-4">
-                    Keterangan
+                    Keterangan (proyek & periode kerja)
                   </label>
                   <textarea
                     className="field min-h-[70px] resize-y"
-                    placeholder="Catatan singkat tambahan (opsional)"
+                    placeholder="Contoh: Kerja di PixVerse Canvas, dari Januari sampai Maret 2026"
                     value={preview.keterangan ?? ""}
                     onChange={(e) =>
                       setPreview({ ...preview, keterangan: e.target.value })

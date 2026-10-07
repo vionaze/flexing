@@ -3,6 +3,10 @@ import { Tilt3D, Parallax } from "./parallax";
 import { isPlayableVideoUrl, detectMediaType } from "@/lib/media";
 import { MediaEmbed } from "./media-embed";
 
+function shortContract(c: string): string {
+  return c.length > 14 ? `${c.slice(0, 6)}…${c.slice(-4)}` : c;
+}
+
 function formatDate(iso: string): string {
   try {
     return new Intl.DateTimeFormat("id-ID", {
@@ -164,13 +168,29 @@ export function PortfolioCard({
               <span className={meta.dotClass + " mt-2 shrink-0"} />
             </div>
 
-            {(item.date || item.category) && (
-              <p className="text-[0.68rem] font-medium uppercase tracking-[0.12em] text-text-4">
-                {item.date ? formatDate(item.date) : ""}
-                {item.date && item.category ? " · " : ""}
-                {item.category}
-              </p>
-            )}
+            {(() => {
+              const range = item.date
+                ? item.dateEnd
+                  ? `${formatDate(item.date)} – ${formatDate(item.dateEnd)}`
+                  : formatDate(item.date)
+                : null;
+              const parts = [
+                range,
+                item.category,
+                item.track === "web3" && item.chain ? `⛓ ${item.chain}` : null,
+                item.track === "web3" && item.contract
+                  ? shortContract(item.contract)
+                  : null,
+                item.track === "web3" && item.gasSpent
+                  ? `⛽ ${item.gasSpent}`
+                  : null,
+              ].filter(Boolean);
+              return parts.length ? (
+                <p className="text-[0.68rem] font-medium uppercase tracking-[0.12em] text-text-4">
+                  {parts.join(" · ")}
+                </p>
+              ) : null;
+            })()}
 
             <p className="flex-1 text-sm leading-relaxed text-text-2">
               {description}

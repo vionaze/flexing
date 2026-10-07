@@ -57,7 +57,11 @@ export interface CreateItemInput {
   mediaType?: MediaType;
   category?: string;
   date?: string;
+  dateEnd?: string;
   keterangan?: string;
+  chain?: string;
+  contract?: string;
+  gasSpent?: string;
 }
 
 export async function createItem(input: CreateItemInput): Promise<PortfolioItem> {
@@ -78,7 +82,11 @@ export async function createItem(input: CreateItemInput): Promise<PortfolioItem>
     mediaType: input.mediaType,
     category: input.category,
     date: input.date,
+    dateEnd: input.dateEnd,
     keterangan: input.keterangan,
+    chain: input.chain,
+    contract: input.contract,
+    gasSpent: input.gasSpent,
     createdAt: now,
     updatedAt: now,
   };
@@ -96,11 +104,15 @@ export interface UpdateItemInput {
   image?: string;
   titleId?: string;
   descriptionId?: string;
-  mediaUrl?: string;
-  mediaType?: MediaType;
   category?: string;
   date?: string;
+  dateEnd?: string;
   keterangan?: string;
+  chain?: string;
+  contract?: string;
+  gasSpent?: string;
+  mediaUrl?: string;
+  mediaType?: MediaType;
   archived?: boolean;
 }
 

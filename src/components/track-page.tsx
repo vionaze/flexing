@@ -177,8 +177,15 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
                       </h2>
                       <p className="mt-1 text-xs text-text-4">
                         {[
+                          featured.date
+                            ? featured.dateEnd
+                              ? `${formatDateItem(featured.date)} – ${formatDateItem(featured.dateEnd)}`
+                              : formatDateItem(featured.date)
+                            : null,
                           featured.category,
-                          featured.date ? formatDateItem(featured.date) : null,
+                          featured.track === "web3" && featured.chain
+                            ? `⛓ ${featured.chain}`
+                            : null,
                         ]
                           .filter(Boolean)
                           .join(" · ")}

@@ -27,7 +27,12 @@ export interface PortfolioItem {
   mediaType?: MediaType;
   category?: string;
   date?: string;
+  dateEnd?: string;
   keterangan?: string;
+  /* WEB3 */
+  chain?: string;
+  contract?: string;
+  gasSpent?: string;
   archived?: boolean;
   createdAt: string;
   updatedAt: string;

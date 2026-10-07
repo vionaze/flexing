@@ -48,7 +48,11 @@ export async function POST(request: Request) {
     mediaType,
     category,
     date,
+    dateEnd,
     keterangan,
+    chain,
+    contract,
+    gasSpent,
   } = body;
 
   if (!isTrack(track) || typeof title !== "string" || typeof description !== "string" || typeof url !== "string") {
@@ -73,7 +77,11 @@ export async function POST(request: Request) {
       mediaType === "video" || mediaType === "image" ? mediaType : undefined,
     category: typeof category === "string" ? category : undefined,
     date: typeof date === "string" ? date : undefined,
+    dateEnd: typeof dateEnd === "string" ? dateEnd : undefined,
     keterangan: typeof keterangan === "string" ? keterangan : undefined,
+    chain: typeof chain === "string" ? chain : undefined,
+    contract: typeof contract === "string" ? contract : undefined,
+    gasSpent: typeof gasSpent === "string" ? gasSpent : undefined,
   });
 
   await appendLog({
