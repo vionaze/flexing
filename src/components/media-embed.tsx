@@ -28,9 +28,11 @@ function parse(url: string): Parsed {
  */
 export function MediaEmbed({
   url,
+  poster,
   className = "",
 }: {
   url: string;
+  poster?: string;
   className?: string;
 }) {
   const parsed = parse(url);
@@ -91,7 +93,13 @@ export function MediaEmbed({
   if (parsed.kind === "x") {
     if (xVideo)
       return (
-        <video src={xVideo} controls playsInline className={className} />
+        <video
+          src={xVideo}
+          poster={poster}
+          controls
+          playsInline
+          className={className}
+        />
       );
     if (xFail)
       return (
@@ -118,6 +126,7 @@ export function MediaEmbed({
   return (
     <video
       src={parsed.kind === "file" ? parsed.url : url}
+      poster={poster}
       controls
       playsInline
       preload="metadata"

@@ -1,5 +1,6 @@
 import type { Lang, PortfolioItem, Track } from "@/lib/types";
 import { Tilt3D, Parallax } from "./parallax";
+import { isPlayableVideoUrl, detectMediaType } from "@/lib/media";
 import { MediaEmbed } from "./media-embed";
 
 function formatDate(iso: string): string {
@@ -67,6 +68,19 @@ export function PortfolioCard({
   const description =
     lang === "id" && item.descriptionId ? item.descriptionId : item.description;
 
+  /* tipe live dari URL media (mediaType tersimpan bisa salah, mis. thumbnail jpg) */
+  const liveType = item.mediaUrl
+    ? detectMediaType(item.mediaUrl)
+    : item.mediaType ?? "image";
+  /* AI bilang video tapi URL sumber bisa diputar -> player dari URL sumber */
+  const videoSrc =
+    liveType === "video"
+      ? item.mediaUrl ?? null
+      : item.mediaType === "video" && isPlayableVideoUrl(item.url)
+        ? item.url
+        : null;
+  const poster = liveType === "image" ? item.mediaUrl : undefined;
+
   return (
     <Parallax speed={index % 2 === 0 ? 0.05 : -0.05}>
       <Tilt3D max={8} className="h-full">
@@ -75,11 +89,11 @@ export function PortfolioCard({
             className="relative h-40 w-full overflow-hidden bg-bg-2"
             style={{ transformStyle: "preserve-3d" }}
           >
-            {item.mediaUrl && item.mediaType === "video" ? (
+            {videoSrc ? (
               <div className="h-full w-full">
-                <MediaEmbed url={item.mediaUrl} className="h-full w-full" />
+                <MediaEmbed url={videoSrc} poster={poster} className="h-full w-full" />
               </div>
-            ) : item.mediaUrl && item.mediaType === "image" ? (
+            ) : item.mediaUrl && liveType === "image" ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={item.mediaUrl}

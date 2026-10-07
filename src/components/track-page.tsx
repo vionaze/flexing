@@ -4,6 +4,7 @@ import { PortfolioCard, trackMeta } from "@/components/portfolio-card";
 import { Parallax, Reveal, DepthStage } from "@/components/parallax";
 import { Navbar } from "@/components/navbar";
 import { MediaEmbed } from "@/components/media-embed";
+import { detectMediaType, isPlayableVideoUrl } from "@/lib/media";
 import { getLang, t } from "@/lib/i18n";
 import type { Track } from "@/lib/types";
 
@@ -114,34 +115,55 @@ export async function TrackPortfolioPage({ track }: { track: Track }) {
               <Reveal>
                 <div className="overflow-hidden rounded-[1.5rem] border border-border bg-surface/40">
                   <div className="aspect-video w-full bg-bg-2">
-                    {featured.mediaUrl && featured.mediaType === "video" ? (
-                      <MediaEmbed
-                        url={featured.mediaUrl}
-                        className="h-full w-full"
-                      />
-                    ) : featured.mediaUrl && featured.mediaType === "image" ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={featured.mediaUrl}
-                        alt={featured.title}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : featured.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={featured.image}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div
-                        className={`h-full w-full bg-gradient-to-br ${
-                          isSi
-                            ? "from-si/20 via-transparent to-web3/5"
-                            : "from-web3/20 via-transparent to-si/5"
-                        }`}
-                      />
-                    )}
+                    {(() => {
+                      const liveType = featured.mediaUrl
+                        ? detectMediaType(featured.mediaUrl)
+                        : featured.mediaType ?? "image";
+                      const videoSrc =
+                        liveType === "video"
+                          ? featured.mediaUrl ?? null
+                          : featured.mediaType === "video" &&
+                              isPlayableVideoUrl(featured.url)
+                            ? featured.url
+                            : null;
+                      const poster =
+                        liveType === "image" ? featured.mediaUrl : undefined;
+                      if (videoSrc)
+                        return (
+                          <MediaEmbed
+                            url={videoSrc}
+                            poster={poster}
+                            className="h-full w-full"
+                          />
+                        );
+                      if (featured.mediaUrl && liveType === "image")
+                        return (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={featured.mediaUrl}
+                            alt={featured.title}
+                            className="h-full w-full object-cover"
+                          />
+                        );
+                      if (featured.image)
+                        return (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={featured.image}
+                            alt=""
+                            className="h-full w-full object-cover"
+                          />
+                        );
+                      return (
+                        <div
+                          className={`h-full w-full bg-gradient-to-br ${
+                            isSi
+                              ? "from-si/20 via-transparent to-web3/5"
+                              : "from-web3/20 via-transparent to-si/5"
+                          }`}
+                        />
+                      );
+                    })()}
                   </div>
                   <div className="flex flex-wrap items-center justify-between gap-4 p-6 sm:p-8">
                     <div className="min-w-0">
