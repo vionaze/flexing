@@ -25,6 +25,7 @@ export interface PortfolioItem {
   category?: string;
   date?: string;
   keterangan?: string;
+  archived?: boolean;
   createdAt: string;
   updatedAt: string;
 }

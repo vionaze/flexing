@@ -36,6 +36,7 @@ export function AdminDashboard({
   const [track, setTrack] = useState<Track>("si");
   const [preview, setPreview] = useState<EnrichPreview | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<"semua" | Track>("semua");
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [enriching, startEnrich] = useTransition();
@@ -244,6 +245,36 @@ export function AdminDashboard({
       keterangan: item.keterangan,
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function formatDate(iso: string): string {
+    try {
+      return new Intl.DateTimeFormat("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+      }).format(new Date(iso));
+    } catch {
+      return iso;
+    }
+  }
+
+  const filteredItems = items.filter(
+    (i) => filter === "semua" || i.track === filter
+  );
+
+  async function handleArchive(item: PortfolioItem) {
+    const res = await fetch(`/api/portfolio/${item.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ archived: !item.archived }),
+    });
+    if (res.ok) {
+      flash(item.archived ? "Porto dikembalikan" : "Porto diarsipkan");
+      await refreshItems();
+      router.refresh();
+    }
   }
 
   async function handleLogout() {
@@ -592,66 +623,78 @@ export function AdminDashboard({
           )}
         </section>
 
-        {/* LIST */}
-        <section>
-          <div className="flex items-baseline justify-between">
-            <h2 className="display text-xl">Daftar porto</h2>
-            <span className="label">{items.length} item</span>
+        {/* LIST — ringkas per track */}
+        <section className="mt-8">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              {(["semua", "si", "web3"] as const).map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setFilter(f)}
+                  className={`btn btn-sm ${
+                    filter === f
+                      ? f === "si"
+                        ? "btn-si"
+                        : f === "web3"
+                          ? "btn-web3"
+                          : "btn-primary"
+                      : "btn-ghost"
+                  }`}
+                >
+                  {f === "semua" ? "Semua" : trackLabel[f]}
+                </button>
+              ))}
+            </div>
+            <span className="label">{filteredItems.length} item</span>
           </div>
 
-          <div className="mt-5 space-y-3">
-            {items.length === 0 ? (
-              <div className="card-flat px-6 py-16 text-center text-text-3">
-                Belum ada porto. Tambahkan yang pertama lewat form di kiri.
+          <div className="mt-5 space-y-2.5">
+            {filteredItems.length === 0 ? (
+              <div className="card-flat px-6 py-14 text-center text-text-3">
+                Tidak ada porto di kategori ini.
               </div>
             ) : (
-              items.map((item, i) => (
-                <div key={item.id} className="lift card-flat p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="label">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <h3 className="font-semibold leading-snug tracking-tight">
-                          {item.title}
-                        </h3>
-                      </div>
-                      <p className="mt-1.5 text-xs text-text-4">
-                        {trackLabel[item.track]} · {item.source} ·{" "}
-                        {new Date(item.createdAt).toLocaleDateString("id-ID")}
-                      </p>
-                    </div>
-                    <span
-                      className={`mt-1.5 shrink-0 ${
-                        item.track === "si" ? "dot-si" : "dot-web3"
-                      }`}
-                    />
+              filteredItems.map((item) => (
+                <div
+                  key={item.id}
+                  className={`card-flat flex items-center gap-3 px-5 py-4 ${
+                    item.archived ? "opacity-50" : ""
+                  }`}
+                >
+                  <span
+                    className={`shrink-0 ${
+                      item.track === "si" ? "dot-si" : "dot-web3"
+                    }`}
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold">
+                      {item.title}
+                      {item.archived && (
+                        <span className="label ml-2">arsip</span>
+                      )}
+                    </p>
+                    <p className="truncate text-xs text-text-4">
+                      {trackLabel[item.track]}
+                      {item.category ? ` · ${item.category}` : ""}
+                      {item.date ? ` · ${formatDate(item.date)}` : ""}
+                    </p>
                   </div>
-
-                  <p className="mt-3 line-clamp-2 text-sm text-text-2">
-                    {item.description}
-                  </p>
-
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 block truncate text-xs text-text-4 transition-colors hover:text-text-2"
-                  >
-                    {item.url}
-                  </a>
-
-                  <div className="mt-4 flex gap-2">
+                  <div className="flex shrink-0 gap-2">
                     <button
                       onClick={() => handleEdit(item)}
-                      className="btn btn-ghost btn-sm lift"
+                      className="btn btn-ghost btn-sm"
                     >
                       Edit
                     </button>
                     <button
+                      onClick={() => handleArchive(item)}
+                      className="btn btn-ghost btn-sm"
+                    >
+                      {item.archived ? "Kembalikan" : "Arsip"}
+                    </button>
+                    <button
                       onClick={() => handleDelete(item.id)}
-                      className="btn btn-danger btn-sm lift"
+                      className="btn btn-danger btn-sm"
                     >
                       Hapus
                     </button>

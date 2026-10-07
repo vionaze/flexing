@@ -34,7 +34,7 @@ export async function writePortfolio(data: PortfolioData): Promise<void> {
 export async function listByTrack(track: Track): Promise<PortfolioItem[]> {
   const data = await readPortfolio();
   return data.items
-    .filter((item) => item.track === track)
+    .filter((item) => item.track === track && !item.archived)
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
@@ -95,6 +95,7 @@ export interface UpdateItemInput {
   category?: string;
   date?: string;
   keterangan?: string;
+  archived?: boolean;
 }
 
 export async function updateItem(

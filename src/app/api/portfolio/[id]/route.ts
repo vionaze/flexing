@@ -47,6 +47,7 @@ export async function PATCH(request: Request, { params }: Params) {
   if (typeof body.date === "string") patch.date = body.date;
   if (typeof body.keterangan === "string")
     patch.keterangan = body.keterangan;
+  if (typeof body.archived === "boolean") patch.archived = body.archived;
 
   const item = await updateItem(id, patch);
   if (!item) {
