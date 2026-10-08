@@ -4,6 +4,7 @@ import { PortfolioCard, trackMeta } from "@/components/portfolio-card";
 import { Parallax, Reveal, DepthStage } from "@/components/parallax";
 import { Navbar } from "@/components/navbar";
 import { MediaEmbed } from "@/components/media-embed";
+import { DateBadge } from "@/components/date-badge";
 import { detectMediaType, isPlayableVideoUrl } from "@/lib/media";
 import { getLang, t } from "@/lib/i18n";
 import type { Track } from "@/lib/types";
@@ -214,9 +215,18 @@ export async function TrackPortfolioPage({
                   </div>
                   <div className="flex flex-wrap items-center justify-between gap-4 p-6 sm:p-8">
                     <div className="min-w-0">
-                      <p className="label">
-                        {lang === "id" ? "karya terbaru" : "latest work"}
-                      </p>
+                      <div className="flex flex-wrap items-center gap-3">
+                        {featured.date && (
+                          <DateBadge>
+                            {featured.dateEnd
+                              ? `${formatDateItem(featured.date)} – ${formatDateItem(featured.dateEnd)}`
+                              : formatDateItem(featured.date)}
+                          </DateBadge>
+                        )}
+                        <p className="label">
+                          {lang === "id" ? "karya terbaru" : "latest work"}
+                        </p>
+                      </div>
                       <h2 className="display mt-1.5 text-2xl sm:text-3xl">
                         {lang === "id" && featured.titleId
                           ? featured.titleId
@@ -228,18 +238,7 @@ export async function TrackPortfolioPage({
                         </p>
                       )}
                       <p className="mt-1 text-xs text-text-4">
-                        {[
-                          featured.track === "web3" && featured.yearStart
-                            ? `${featured.yearStart} – ${featured.yearEnd === "now" ? "now" : featured.yearEnd}`
-                            : featured.date
-                              ? featured.dateEnd
-                                ? `${formatDateItem(featured.date)} – ${formatDateItem(featured.dateEnd)}`
-                                : formatDateItem(featured.date)
-                              : null,
-                          featured.category,
-                        ]
-                          .filter(Boolean)
-                          .join(" · ")}
+                        {featured.category}
                       </p>
                     </div>
                     <a

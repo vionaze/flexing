@@ -2,10 +2,7 @@ import type { Lang, PortfolioItem, Track } from "@/lib/types";
 import { Tilt3D, Parallax } from "./parallax";
 import { isPlayableVideoUrl, detectMediaType } from "@/lib/media";
 import { MediaEmbed } from "./media-embed";
-
-function shortContract(c: string): string {
-  return c.length > 14 ? `${c.slice(0, 6)}…${c.slice(-4)}` : c;
-}
+import { DateBadge } from "./date-badge";
 
 function formatDate(iso: string): string {
   try {
@@ -168,17 +165,20 @@ export function PortfolioCard({
               <span className={meta.dotClass + " mt-2 shrink-0"} />
             </div>
 
-            {(() => {
-              const years =
-                item.track === "web3" && item.yearStart
+            {(item.date || item.yearStart) && (
+              <DateBadge>
+                {item.track === "web3" && item.yearStart
                   ? `${item.yearStart} – ${item.yearEnd === "now" ? "now" : item.yearEnd}`
-                  : null;
-              const range = item.date
-                ? item.dateEnd
-                  ? `${formatDate(item.date)} – ${formatDate(item.dateEnd)}`
-                  : formatDate(item.date)
-                : null;
-              const parts = [years ?? range, item.category].filter(Boolean);
+                  : item.date
+                    ? item.dateEnd
+                      ? `${formatDate(item.date)} – ${formatDate(item.dateEnd)}`
+                      : formatDate(item.date)
+                    : null}
+              </DateBadge>
+            )}
+
+            {(() => {
+              const parts = [item.category].filter(Boolean);
               return parts.length ? (
                 <p className="text-[0.68rem] font-medium uppercase tracking-[0.12em] text-text-4">
                   {parts.join(" · ")}
