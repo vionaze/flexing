@@ -68,7 +68,7 @@ export default async function LandingPage() {
                 Super Intelligence / AI &amp; WEB3 Content Creator — I&apos;m
                 an AI and Web3 creator from Indonesia. I get to new image and
                 video models early, run them through real projects, and AI
-                filmmaking experiments.
+                filmmaking experiments since 2022.
               </p>
             </Reveal>
 
