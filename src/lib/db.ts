@@ -35,7 +35,13 @@ export async function listByTrack(track: Track): Promise<PortfolioItem[]> {
   const data = await readPortfolio();
   return data.items
     .filter((item) => item.track === track && !item.archived)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    .sort((a, b) => {
+      /* ber-tanggal dulu (terbaru di atas); tanpa tanggal paling bawah */
+      if (a.date && b.date) return b.date.localeCompare(a.date);
+      if (a.date) return -1;
+      if (b.date) return 1;
+      return b.createdAt.localeCompare(a.createdAt);
+    });
 }
 
 export async function getItem(id: string): Promise<PortfolioItem | null> {
