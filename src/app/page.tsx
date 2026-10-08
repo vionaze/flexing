@@ -66,9 +66,10 @@ export default async function LandingPage() {
             <Reveal delay={0.1}>
               <p className="mt-6 max-w-xl text-xl leading-relaxed text-text-2 sm:text-2xl">
                 Super Intelligence / AI &amp; WEB3 Content Creator — I&apos;m
-                an AI and Web3 creator from Indonesia. I get to new image and
-                video models early, run them through real projects, and AI
-                filmmaking experiments since 2022.
+                an AI and Web3 creator from Indonesia. In WEB3 since{" "}
+                <span className="text-text">2022</span>, AI filmmaking since{" "}
+                <span className="text-text">2025</span> — I get to new image
+                and video models early and run them through real projects.
               </p>
             </Reveal>
 
